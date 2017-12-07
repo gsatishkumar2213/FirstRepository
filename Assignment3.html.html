@@ -1,0 +1,50 @@
+<html ng-app="demoApp">
+	<head>		
+		<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.6/angular.min.js"></script>	
+		<script>
+			var app=angular.module("demoApp",[]);
+			app.factory("demoFactory",function($http,$q){
+				return{
+					message : function(){
+						var dfd=$q.defer();
+						$http.get("https://api.github.com/orgs/sidgs/repos").success(function(response){
+							dfd.resolve(response);				
+						}).error(function(response){
+							dfd.reject(response);
+						});			
+						return dfd.promise;
+					},
+					message1 : function(){
+						return 'message2';
+					}
+				};
+			});
+			app.controller("demoController",demoController);
+			function demoController($scope,$http,demoFactory){
+				demoFactory.message().then(function(response){		
+					$scope.repos=response;
+					},function(response){
+						
+					});
+			}
+		</script>
+	</head>
+	<body ng-controller="demoController">
+		<table border="1">
+		 <thead>
+		      <tr>
+				<th>Repo Name</th>
+				<th>Repo Id</th>
+				<th>Description</th>
+				<th>Type (Public/Private)</th>
+			  </tr>
+			  <tr ng-repeat="item in repos">
+				<td>{{item.id}}</td>
+				<td>{{item.name}}</td>
+				<td>{{item.description}}</td>
+				<td>{{item.owner.type}}</td>
+			  </tr>
+		 </thead>
+		</table>
+	</body>
+</html>
