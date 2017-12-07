@@ -1,0 +1,8 @@
+
+
+5)
+tests["Body matches string"] = responseBody.has("satish") || responseBody.has("kanna");
+
+4)
+tests["Status code is 200"] = responseCode.code === 200;
+
